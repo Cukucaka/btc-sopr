@@ -1,0 +1,32 @@
+name: update-sopr
+on:
+  schedule:
+    - cron: "0 */4 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch SOPR
+        env:
+          KEY: ${{ secrets.BGEO_KEY }}
+        run: |
+          mkdir -p data
+          if [ -n "$KEY" ]; then AUTH="Authorization: Bearer $KEY"; else AUTH="X-Dummy: 1"; fi
+          curl -sS --fail -H "$AUTH" https://bitcoin-data.com/v1/sopr -o raw.json
+          jq '(if type=="array" then . else .data end)
+              | map(select((.sopr // .value) != null))
+              | map({date: (.d // .date // .time), value: ((.sopr // .value) | tonumber)})
+              | sort_by(.date) | .[-400:]' raw.json > new.json
+          test "$(jq length new.json)" -gt 30
+          mv new.json data/sopr.json
+      - name: Commit
+        run: |
+          git config user.name "sopr-bot"
+          git config user.email "sopr-bot@users.noreply.github.com"
+          git add data/sopr.json
+          git diff --cached --quiet || git commit -m "update sopr"
+          git push
