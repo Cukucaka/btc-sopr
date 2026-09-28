@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Test CoinMetrics
-  run: |
-    curl -s "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=SOPR&frequency=1d&limit_per_asset=2&pretty=true"
-    echo "-----"
-    curl -s "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=SOPR&frequency=1h&limit_per_asset=2&pretty=true"
+        run: |
+          curl -s "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=SOPR&frequency=1d&limit_per_asset=2&pretty=true"
+          echo "-----"
+          curl -s "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=SOPR&frequency=1h&limit_per_asset=2&pretty=true"
 
       - uses: actions/checkout@v4
       - name: Fetch SOPR
