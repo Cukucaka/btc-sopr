@@ -9,6 +9,13 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
+      - name: Test CryptoQuant
+        env:
+          CQ_TOKEN: ${{ secrets.CRYPTOQUANT_TOKEN }}
+        run: |
+          curl -s -H "Authorization: Bearer $CQ_TOKEN" \
+          "https://api.cryptoquant.com/v1/btc/market-indicator/sopr?window=day&limit=2"
+
       - uses: actions/checkout@v4
       - name: Fetch SOPR
         env:
