@@ -9,12 +9,11 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - name: Test CryptoQuant
-        env:
-          CQ_TOKEN: ${{ secrets.CRYPTOQUANT_TOKEN }}
-        run: |
-          curl -s -H "Authorization: Bearer $CQ_TOKEN" \
-          "https://api.cryptoquant.com/v1/btc/market-indicator/sopr?window=day&limit=2"
+      - name: Test CoinMetrics
+  run: |
+    curl -s "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=SOPR&frequency=1d&limit_per_asset=2&pretty=true"
+    echo "-----"
+    curl -s "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=SOPR&frequency=1h&limit_per_asset=2&pretty=true"
 
       - uses: actions/checkout@v4
       - name: Fetch SOPR
